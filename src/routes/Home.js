@@ -1,26 +1,27 @@
+import STwitter from "components/STwitter";
 import { dbService } from "fbase";
 import { useEffect, useState } from "react";
-function Home() {
+function Home({ userObj }) {
   const [stwitter, setSTwitter] = useState("");
-  const [stwitters, setSTiwtters] = useState([]);
-  const getstwitter = async () => {
-    const dbsTwitter = await dbService.collection("simple-twitter").get();
-    dbsTwitter.forEach((document) => {
-      const stwitterObject = {
-        ...document.data(),
-        id: document.id,
-      };
-      setSTiwtters((prev) => [stwitterObject, ...prev]);
-    });
-  };
+  const [stwitters, setSTwitters] = useState([]);
   useEffect(() => {
-    getstwitter();
+    dbService
+      .collection("simple-twitter")
+      .orderBy("createdAt", "desc")
+      .onSnapshot((snapshot) => {
+        const stwitterArray = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setSTwitters(stwitterArray);
+      });
   }, []);
   const onSubmit = async (event) => {
     event.preventDefault();
     await dbService.collection("simple-twitter").add({
-      stwitter,
+      text: stwitter,
       createdAt: Date.now(),
+      creatorID: userObj.uid,
     });
     setSTwitter("");
   };
@@ -43,10 +44,19 @@ function Home() {
         <input type="submit" value="sTwitter" />
       </form>
       <div>
+        {/* Profile Image */}
+        <img
+          src={userObj.photoURL}
+          alt=""
+          width={150}
+          style={{ borderRadius: "50%" }}
+        />
         {stwitters.map((sTwitter) => (
-          <div key={sTwitter.id}>
-            <h4>{sTwitter.stwitter}</h4>
-          </div>
+          <STwitter
+            key={sTwitter.id}
+            sTwitterObj={sTwitter}
+            isOwner={sTwitter.creatorID === userObj.uid}
+          />
         ))}
       </div>
     </>
