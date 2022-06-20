@@ -30,7 +30,7 @@ function STwitter({ sTwitterObj, isOwner }) {
           <form onSubmit={onSubmit}>
             <input
               type="text"
-              placeholder="Edit your message"
+              placeholder="Edit your message2"
               value={newSTwitter}
               required
               onChange={onChange}
