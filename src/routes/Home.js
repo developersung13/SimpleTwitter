@@ -1,9 +1,13 @@
+import { ref, uploadString } from "@firebase/storage";
 import STwitter from "components/STwitter";
-import { dbService } from "fbase";
+import { dbService, storageService } from "fbase";
 import { useEffect, useState } from "react";
+import { v4 } from "uuid";
+
 function Home({ userObj }) {
   const [stwitter, setSTwitter] = useState("");
   const [stwitters, setSTwitters] = useState([]);
+  const [attachment, setAttachment] = useState();
   useEffect(() => {
     dbService
       .collection("simple-twitter")
@@ -18,12 +22,15 @@ function Home({ userObj }) {
   }, []);
   const onSubmit = async (event) => {
     event.preventDefault();
-    await dbService.collection("simple-twitter").add({
-      text: stwitter,
-      createdAt: Date.now(),
-      creatorID: userObj.uid,
-    });
-    setSTwitter("");
+    const fileRef = ref(storageService, `${userObj.uid}/${v4()}`);
+    const response = await uploadString(fileRef, attachment, "data_url");
+    console.log(response);
+    // await dbService.collection("simple-twitter").add({
+    //   text: stwitter,
+    //   createdAt: Date.now(),
+    //   creatorID: userObj.uid,
+    // });
+    // setSTwitter("");
   };
   const onChange = (event) => {
     const {
@@ -31,6 +38,21 @@ function Home({ userObj }) {
     } = event;
     setSTwitter(value);
   };
+  const onFileChange = (event) => {
+    const {
+      target: { files },
+    } = event;
+    const theFile = files[0];
+    const reader = new FileReader();
+    reader.onloadend = (finishedEvent) => {
+      const {
+        currentTarget: { result },
+      } = finishedEvent;
+      setAttachment(result);
+    };
+    reader.readAsDataURL(theFile);
+  };
+  const onClearAttachmentClick = () => setAttachment(null);
   return (
     <>
       <form onSubmit={onSubmit}>
@@ -42,6 +64,13 @@ function Home({ userObj }) {
           maxLength={120}
         />
         <input type="submit" value="sTwitter" />
+        <input type="file" accept="image/*" onChange={onFileChange} />
+        {attachment && (
+          <>
+            <img src={attachment} width="100px" height="100px" />
+            <button onClick={onClearAttachmentClick}>Clear</button>
+          </>
+        )}
       </form>
       <div>
         {/* Profile Image */}
