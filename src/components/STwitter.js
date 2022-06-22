@@ -1,4 +1,5 @@
-import { dbService } from "fbase";
+import { deleteObject, ref } from "@firebase/storage";
+import { dbService, storageService } from "fbase";
 import { useState } from "react";
 function STwitter({ sTwitterObj, isOwner }) {
   const [editing, setEditing] = useState(false);
@@ -7,6 +8,7 @@ function STwitter({ sTwitterObj, isOwner }) {
     const ok = window.confirm("Are you sure you want to delete this message?");
     if (ok) {
       await dbService.doc(`simple-twitter/${sTwitterObj.id}`).delete();
+      await deleteObject(ref(storageService, sTwitterObj.attachmentUrl));
     }
   };
   const onSubmit = async (event) => {
@@ -42,6 +44,14 @@ function STwitter({ sTwitterObj, isOwner }) {
       ) : (
         <>
           <h4>{sTwitterObj.text}</h4>
+          {sTwitterObj.attachmentUrl && (
+            <img
+              src={sTwitterObj.attachmentUrl}
+              width="50px"
+              height="50px"
+              alt="attachment"
+            />
+          )}
           {isOwner && (
             <>
               <button onClick={toggleEditing}>Edit message</button>

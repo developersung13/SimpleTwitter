@@ -1,4 +1,4 @@
-import { ref, uploadString } from "@firebase/storage";
+import { getDownloadURL, ref, uploadString } from "@firebase/storage";
 import STwitter from "components/STwitter";
 import { dbService, storageService } from "fbase";
 import { useEffect, useState } from "react";
@@ -7,7 +7,7 @@ import { v4 } from "uuid";
 function Home({ userObj }) {
   const [stwitter, setSTwitter] = useState("");
   const [stwitters, setSTwitters] = useState([]);
-  const [attachment, setAttachment] = useState();
+  const [attachment, setAttachment] = useState("");
   useEffect(() => {
     dbService
       .collection("simple-twitter")
@@ -22,15 +22,21 @@ function Home({ userObj }) {
   }, []);
   const onSubmit = async (event) => {
     event.preventDefault();
-    const fileRef = ref(storageService, `${userObj.uid}/${v4()}`);
-    const response = await uploadString(fileRef, attachment, "data_url");
-    console.log(response);
-    // await dbService.collection("simple-twitter").add({
-    //   text: stwitter,
-    //   createdAt: Date.now(),
-    //   creatorID: userObj.uid,
-    // });
-    // setSTwitter("");
+    let attachmentUrl = "";
+    if (attachment !== "") {
+      const attachmentRef = ref(storageService, `${userObj.uid}/${v4()}`);
+      await uploadString(attachmentRef, attachment, "data_url");
+      attachmentUrl = await getDownloadURL(ref(storageService, attachmentRef));
+    }
+    const sTwitterObj = {
+      text: stwitter,
+      createdAt: Date.now(),
+      creatorID: userObj.uid,
+      attachmentUrl,
+    };
+    await dbService.collection("simple-twitter").add(sTwitterObj);
+    setSTwitter("");
+    setAttachment("");
   };
   const onChange = (event) => {
     const {
@@ -52,7 +58,7 @@ function Home({ userObj }) {
     };
     reader.readAsDataURL(theFile);
   };
-  const onClearAttachmentClick = () => setAttachment(null);
+  const onClearAttachmentClick = () => setAttachment("");
   return (
     <>
       <form onSubmit={onSubmit}>
@@ -67,7 +73,12 @@ function Home({ userObj }) {
         <input type="file" accept="image/*" onChange={onFileChange} />
         {attachment && (
           <>
-            <img src={attachment} width="100px" height="100px" />
+            <img
+              src={attachment}
+              width="100px"
+              height="100px"
+              alt="attachment"
+            />
             <button onClick={onClearAttachmentClick}>Clear</button>
           </>
         )}
