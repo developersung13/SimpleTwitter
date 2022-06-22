@@ -84,13 +84,6 @@ function Home({ userObj }) {
         )}
       </form>
       <div>
-        {/* Profile Image */}
-        <img
-          src={userObj.photoURL}
-          alt=""
-          width={150}
-          style={{ borderRadius: "50%" }}
-        />
         {stwitters.map((sTwitter) => (
           <STwitter
             key={sTwitter.id}
