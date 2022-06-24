@@ -8,7 +8,6 @@ function Profile({ userObj, refreshUser }) {
   const onLogOutClick = () => {
     authService.signOut();
     history.push("/");
-    window.location.reload();
   };
   const getMysTwitters = async () => {
     await dbService

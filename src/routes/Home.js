@@ -22,21 +22,28 @@ function Home({ userObj }) {
   }, []);
   const onSubmit = async (event) => {
     event.preventDefault();
-    let attachmentUrl = "";
-    if (attachment !== "") {
-      const attachmentRef = ref(storageService, `${userObj.uid}/${v4()}`);
-      await uploadString(attachmentRef, attachment, "data_url");
-      attachmentUrl = await getDownloadURL(ref(storageService, attachmentRef));
+    if (stwitter === "") {
+      alert("입력된 내용이 없습니다.");
+      return;
+    } else {
+      let attachmentUrl = "";
+      if (attachment !== "") {
+        const attachmentRef = ref(storageService, `${userObj.uid}/${v4()}`);
+        await uploadString(attachmentRef, attachment, "data_url");
+        attachmentUrl = await getDownloadURL(
+          ref(storageService, attachmentRef)
+        );
+      }
+      const sTwitterObj = {
+        text: stwitter,
+        createdAt: Date.now(),
+        creatorID: userObj.uid,
+        attachmentUrl,
+      };
+      await dbService.collection("simple-twitter").add(sTwitterObj);
+      setSTwitter("");
+      setAttachment("");
     }
-    const sTwitterObj = {
-      text: stwitter,
-      createdAt: Date.now(),
-      creatorID: userObj.uid,
-      attachmentUrl,
-    };
-    await dbService.collection("simple-twitter").add(sTwitterObj);
-    setSTwitter("");
-    setAttachment("");
   };
   const onChange = (event) => {
     const {
