@@ -2,7 +2,7 @@ import { authService, dbService } from "fbase";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 
-function Profile({ userObj }) {
+function Profile({ userObj, refreshUser }) {
   const history = useHistory();
   const [newDisplayName, setNewDisplayName] = useState(userObj.displayName);
   const onLogOutClick = () => {
@@ -28,6 +28,7 @@ function Profile({ userObj }) {
         displayName: newDisplayName,
         // photoURL: ...
       });
+      refreshUser();
     } else {
       alert("변경할 이름과 입력된 이름이 같습니다.");
     }
