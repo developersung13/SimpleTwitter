@@ -19,9 +19,9 @@ function Home({ userObj }) {
   }, []);
 
   return (
-    <>
+    <div className="container">
       <STwitterFactory userObj={userObj} />
-      <div>
+      <div style={{ marginTop: 30 }}>
         {stwitters.map((sTwitter) => (
           <STwitter
             key={sTwitter.id}
@@ -30,7 +30,7 @@ function Home({ userObj }) {
           />
         ))}
       </div>
-    </>
+    </div>
   );
 }
 

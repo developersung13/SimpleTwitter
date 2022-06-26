@@ -39,7 +39,7 @@ function Profile({ userObj, refreshUser }) {
     setNewDisplayName(value);
   };
   return (
-    <>
+    <div className="container">
       {/* Profile Image */}
       <img
         src={userObj.photoURL}
@@ -50,17 +50,26 @@ function Profile({ userObj, refreshUser }) {
         required
       />
       <br />
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} className="profileForm">
         <input
           onChange={onChange}
           type="text"
           placeholder={`${newDisplayName} (Display name)`}
           required
+          autoFocus
+          className="formInput"
         />
-        <input type="submit" value="Update Profile" />
+        <input
+          type="submit"
+          value="Update Profile"
+          className="formBtn"
+          style={{ marginTop: 10 }}
+        />
       </form>
-      <button onClick={onLogOutClick}>Log out</button>
-    </>
+      <span className="formBtn cancelBtn logOut" onClick={onLogOutClick}>
+        Log Out
+      </span>
+    </div>
   );
 }
 
