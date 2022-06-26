@@ -48,6 +48,7 @@ function Profile({ userObj, refreshUser }) {
         height="150px"
         style={{ borderRadius: "50%" }}
         required
+        className="profileImg"
       />
       <br />
       <form onSubmit={onSubmit} className="profileForm">

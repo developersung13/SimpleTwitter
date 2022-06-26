@@ -40,7 +40,6 @@ function STwitterFactory({ userObj }) {
     setSTwitter(value);
   };
   const onFileChange = (event) => {
-    console.log("Entered");
     const {
       target: { files },
     } = event;

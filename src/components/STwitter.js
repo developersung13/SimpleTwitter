@@ -56,7 +56,7 @@ function STwitter({ sTwitterObj, isOwner }) {
           )}
           {isOwner && (
             <>
-              <div className="nweet__actions">
+              <div className="sTwitter__actions">
                 <span onClick={onDeleteClick}>
                   <FontAwesomeIcon icon={faTrash} />
                 </span>
