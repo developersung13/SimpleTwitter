@@ -7,10 +7,10 @@ import Navigation from "components/Navigation";
 function AppRouter({ isLoggedIn, userObj, refreshUser }) {
   return (
     <Router>
-      {isLoggedIn && <Navigation userObj={userObj} />}
       <Switch>
         {isLoggedIn ? (
           <>
+            <Navigation userObj={userObj} />
             <div
               style={{
                 maxWidth: 890,
