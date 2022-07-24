@@ -1,7 +1,6 @@
 import AuthForm from "components/AuthForm";
 import { authService } from "fbase";
 import { firebaseInstance } from "fbase";
-import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTwitter,
