@@ -247,7 +247,7 @@ form {
 .authInput {
   max-width: 320px;
   width: 100%;
-  padding: 10px;
+  padding: 10px 17px;
   border-radius: 30px;
   background-color: rgba(255, 255, 255, 1);
   margin-bottom: 10px;
