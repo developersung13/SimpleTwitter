@@ -47,6 +47,7 @@ function AuthForm() {
           placeholder="Email"
           required
           value={email}
+          autoFocus={true}
           className="authInput"
         />
         <input
