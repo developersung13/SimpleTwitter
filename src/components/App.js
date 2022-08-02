@@ -38,7 +38,7 @@ function App() {
           userObj={userObj}
         />
       ) : (
-        "Initializing..."
+        <p className="init">Initializing...</p>
       )}
     </>
   );
